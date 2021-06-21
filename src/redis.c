@@ -232,9 +232,9 @@ struct redisCommand redisCommandTable[] = {
     {"multi",multiCommand,1,"rsF",0,NULL,0,0,0,0,0},
     {"exec",execCommand,1,"sM",0,NULL,0,0,0,0,0},
     {"discard",discardCommand,1,"rsF",0,NULL,0,0,0,0,0},
-    {"sync",syncCommand,1,"ars",0,NULL,0,0,0,0,0},
-    {"psync",syncCommand,3,"ars",0,NULL,0,0,0,0,0},
-    {"replconf",replconfCommand,-1,"arslt",0,NULL,0,0,0,0,0},
+    // {"sync",syncCommand,1,"ars",0,NULL,0,0,0,0,0},
+    // {"psync",syncCommand,3,"ars",0,NULL,0,0,0,0,0},
+    // {"replconf",replconfCommand,-1,"arslt",0,NULL,0,0,0,0,0},
     {"flushdb",flushdbCommand,1,"w",0,NULL,0,0,0,0,0},
     {"flushall",flushallCommand,1,"w",0,NULL,0,0,0,0,0},
     {"sort",sortCommand,-2,"wm",0,NULL,1,1,1,0,0},
@@ -243,10 +243,10 @@ struct redisCommand redisCommandTable[] = {
     {"ttl",ttlCommand,2,"rF",0,NULL,1,1,1,0,0},
     {"pttl",pttlCommand,2,"rF",0,NULL,1,1,1,0,0},
     {"persist",persistCommand,2,"wF",0,NULL,1,1,1,0,0},
-    {"slaveof",slaveofCommand,3,"ast",0,NULL,0,0,0,0,0},
-    {"role",roleCommand,1,"lst",0,NULL,0,0,0,0,0},
+    // {"slaveof",slaveofCommand,3,"ast",0,NULL,0,0,0,0,0},
+    // {"role",roleCommand,1,"lst",0,NULL,0,0,0,0,0},
     {"debug",debugCommand,-2,"as",0,NULL,0,0,0,0,0},
-    {"config",configCommand,-2,"art",0,NULL,0,0,0,0,0},
+    // {"config",configCommand,-2,"art",0,NULL,0,0,0,0,0},
     {"subscribe",subscribeCommand,-2,"rpslt",0,NULL,0,0,0,0,0},
     {"unsubscribe",unsubscribeCommand,-1,"rpslt",0,NULL,0,0,0,0,0},
     {"psubscribe",psubscribeCommand,-2,"rpslt",0,NULL,0,0,0,0,0},
@@ -255,26 +255,26 @@ struct redisCommand redisCommandTable[] = {
     {"pubsub",pubsubCommand,-2,"pltrR",0,NULL,0,0,0,0,0},
     {"watch",watchCommand,-2,"rsF",0,NULL,1,-1,1,0,0},
     {"unwatch",unwatchCommand,1,"rsF",0,NULL,0,0,0,0,0},
-    {"restore",restoreCommand,4,"wm",0,NULL,1,1,1,0,0},
-    {"migrate",migrateCommand,6,"w",0,NULL,0,0,0,0,0},
-    {"dump",dumpCommand,2,"r",0,NULL,1,1,1,0,0},
+    // {"restore",restoreCommand,4,"wm",0,NULL,1,1,1,0,0},
+    // {"migrate",migrateCommand,6,"w",0,NULL,0,0,0,0,0},
+    // {"dump",dumpCommand,2,"r",0,NULL,1,1,1,0,0},
     {"object",objectCommand,3,"r",0,NULL,2,2,2,0,0},
     {"client",clientCommand,-2,"rs",0,NULL,0,0,0,0,0},
     {"eval",evalCommand,-3,"s",0,zunionInterGetKeys,0,0,0,0,0},
     {"evalsha",evalShaCommand,-3,"s",0,zunionInterGetKeys,0,0,0,0,0},
-    {"slowlog",slowlogCommand,-2,"r",0,NULL,0,0,0,0,0},
+    // {"slowlog",slowlogCommand,-2,"r",0,NULL,0,0,0,0,0},
     {"script",scriptCommand,-2,"rs",0,NULL,0,0,0,0,0},
     {"time",timeCommand,1,"rRF",0,NULL,0,0,0,0,0},
     {"bitop",bitopCommand,-4,"wm",0,NULL,2,-1,1,0,0},
     {"bitcount",bitcountCommand,-2,"r",0,NULL,1,1,1,0,0},
     {"bitpos",bitposCommand,-3,"r",0,NULL,1,1,1,0,0},
     {"command",commandCommand,0,"rlt",0,NULL,0,0,0,0,0},
-    {"pfselftest",pfselftestCommand,1,"r",0,NULL,0,0,0,0,0},
-    {"pfadd",pfaddCommand,-2,"wmF",0,NULL,1,1,1,0,0},
-    {"pfcount",pfcountCommand,-2,"r",0,NULL,1,-1,1,0,0},
-    {"pfmerge",pfmergeCommand,-2,"wm",0,NULL,1,-1,1,0,0},
-    {"pfdebug",pfdebugCommand,-3,"w",0,NULL,0,0,0,0,0},
-    {"latency",latencyCommand,-2,"arslt",0,NULL,0,0,0,0,0}
+    // {"pfselftest",pfselftestCommand,1,"r",0,NULL,0,0,0,0,0},
+    // {"pfadd",pfaddCommand,-2,"wmF",0,NULL,1,1,1,0,0},
+    // {"pfcount",pfcountCommand,-2,"r",0,NULL,1,-1,1,0,0},
+    // {"pfmerge",pfmergeCommand,-2,"wm",0,NULL,1,-1,1,0,0},
+    // {"pfdebug",pfdebugCommand,-3,"w",0,NULL,0,0,0,0,0},
+    // {"latency",latencyCommand,-2,"arslt",0,NULL,0,0,0,0,0}
 };
 
 /*============================ Utility functions ============================ */
@@ -1776,7 +1776,7 @@ void initServer(void) {
 
     replicationScriptCacheInit();
     scriptingInit();
-    slowlogInit();
+//    slowlogInit();
     latencyMonitorInit();
     bioInit();
 }
@@ -1968,7 +1968,7 @@ void call(redisClient *c, int flags) {
         if (c->flags & REDIS_FORCE_AOF)
             server.lua_caller->flags |= REDIS_FORCE_AOF;
     }
-
+#if 0
     /* Log the command into the Slow log if needed, and populate the
      * per-command statistics that we show in INFO commandstats. */
     if (flags & REDIS_CALL_SLOWLOG && c->cmd->proc != execCommand) {
@@ -1977,6 +1977,7 @@ void call(redisClient *c, int flags) {
         latencyAddSampleIfNeeded(latency_event,duration/1000);
         slowlogPushEntryIfNeeded(c->argv,c->argc,duration);
     }
+#endif
     if (flags & REDIS_CALL_STATS) {
         c->cmd->microseconds += duration;
         c->cmd->calls++;
